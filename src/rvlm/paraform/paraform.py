@@ -15,17 +15,42 @@ class Object3D(object):
         self.pf = pf
         self.components = None
 
+    def __and__(self, other):
+        return intersection(self, other)
+
+    def __or__(self, other):
+        return union(self, other)
+
+    def __xor__(self, other):
+        return xunion(self, other)
+
+    def __add__(self, other):
+        return union(self, other)
+
+    def __sub__(self, other):
+        return difference(self, other)
+
     def union(self, *others):
         return union(self, *others)
 
     def intersection(self, *others):
         return intersection(self, *others)
 
+    def plus(self, other):
+        return union(self, other)
+
     def minus(self, other):
         return difference(self, other)
 
     def mirror(self, **kwargs):
         return mirror(self, **kwargs)
+
+
+def intersection(*objs):
+    def pf(x, y, z):
+        return all(map(lambda obj: obj.pf(x, y, z), objs))
+
+    return Object3D(pf=pf, components=objs)
 
 
 def union(*objs):
@@ -35,11 +60,11 @@ def union(*objs):
     return Object3D(pf=pf, components=objs)
 
 
-def intersection(*objs):
-    def pf(x, y, z):
-        return all(map(lambda obj: obj.pf(x, y, z), objs))
+def xunion(obj1, obj2):
+    def f(pf1, pf2):
+        return lambda x, y, z: pf1(x, y, z) ^ pf2(x, y, z)
 
-    return Object3D(pf=pf, components=objs)
+    return Object3D(pf=f(obj1.pf, obj2.pf), components=[obj1, obj2])
 
 
 def difference(obj1, obj2):

@@ -21,3 +21,9 @@ desirable to have a common look for them. Current style is the following:
     - orientation axes visibility: off
     - screenshot: 600x600 or something x600
 
+TODO:
+-----
+
+ #. Find file format common to numpy and Paraview
+ #. Find fast way to produce point list over numpy's meshgrid
+ #.
