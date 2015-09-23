@@ -53,22 +53,32 @@ def iterate_ranges(ranges, nums):
     :param nums:
     :return:
 
-        >>> import numpy
-        >>> list(iterate_ranges([(0, 1), (0, 1)], [2, 5]))
-        array([[0, 0],
-               [0, 0.25],
-               [0, 0.5],
-               [0, 0.75]])
+        >>> from pprint import pprint
+        >>> pprint(list(iterate_ranges([(0, 1), (0, 1)], [2, 5])))
+        [(0.0, 0.0),
+         (0.0, 0.25),
+         (0.0, 0.5),
+         (0.0, 0.75),
+         (0.0, 1.0),
+         (1.0, 0.0),
+         (1.0, 0.25),
+         (1.0, 0.5),
+         (1.0, 0.75),
+         (1.0, 1.0)]
 
 
     """
-    if len(ranges) > 0:
+    if len(ranges) <= 0:
+        return None
+    elif len(ranges) == 1:
+        yield from iterate_range(ranges[0], nums[0])
+    else:
         (a, b), *tail_ranges = ranges
         num,    *tail_nums   = nums
 
-        for x in iterate_range(a, b, num):
+        for x in iterate_range((a, b), num):
             for rest in iterate_ranges(tail_ranges, tail_nums):
-                yield (x, rest)
+                yield (x,) + (rest,)
 
 
 # TODO: Ad-hoc
