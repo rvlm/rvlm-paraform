@@ -1,6 +1,6 @@
-import rvlm.paraform.surface as sf
-import rvlm.paraform.render  as pr
 import numpy
+import rvlm.paraform.render as pr
+from rvlm.paraform.all import *
 
 
 def save_surface(fn, surf):
@@ -13,8 +13,7 @@ def save_surface(fn, surf):
 
 
 def test_surfaces():
-
-    surf = sf.Oxy.shift(f_xy=lambda x, y: (x-y)**2)
+    surf = Oxy.shift(z_xy=lambda x, y: (x-y)**2)
     save_surface("test_surf.txt", surf)
 
 

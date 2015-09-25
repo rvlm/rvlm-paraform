@@ -1,4 +1,4 @@
-import rvlm.paraform.paraform as _pf
+import rvlm.paraform.solid as _pf
 
 
 class Box(_pf.Object3D):
