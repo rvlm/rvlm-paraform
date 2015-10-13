@@ -1,7 +1,7 @@
 import rvlm.paraform.solid as _pf
 
 
-class Box(_pf.Object3D):
+class Box(_pf.Solid):
 
     def __init__(self, wx, wy, wz):
 
@@ -17,7 +17,7 @@ class Box(_pf.Object3D):
         self.pf = pf
 
 
-class Ball(_pf.Object3D):
+class Ball(_pf.Solid):
 
     def __init__(self, d):
 
@@ -29,7 +29,7 @@ class Ball(_pf.Object3D):
         self.pf = pf
 
 
-class Cylinder(_pf.Object3D):
+class Cylinder(_pf.Solid):
 
     def __init__(self, r, h):
 
@@ -45,3 +45,11 @@ class Cylinder(_pf.Object3D):
 
 def cube(edge):
     return Box(edge, edge, edge)
+
+
+def box(wx, wy, wz):
+    pass
+
+
+def loft(a, b, r_x=None, r_y=None, r_z=None):
+    pass

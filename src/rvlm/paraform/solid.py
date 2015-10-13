@@ -9,11 +9,12 @@ Terminology:
 """
 
 
-class Object3D(object):
+class Solid(object):
 
-    def __init__(self, pf, components):
+    def __init__(self, pf, nodes=[], genby=None):
         self.pf = pf
-        self.components = None
+        self.nodes = nodes
+        self.genby = genby
 
     def __and__(self, other):
         return intersection(self, other)
@@ -50,35 +51,35 @@ def intersection(*objs):
     def pf(x, y, z):
         return all(map(lambda obj: obj.pf(x, y, z), objs))
 
-    return Object3D(pf=pf, components=objs)
+    return Solid(pf=pf, nodes=objs)
 
 
 def union(*objs):
     def pf(x, y, z):
         return any(map(lambda obj: obj.pf(x, y, z), objs))
 
-    return Object3D(pf=pf, components=objs)
+    return Solid(pf=pf, nodes=objs)
 
 
 def xunion(obj1, obj2):
     def f(pf1, pf2):
         return lambda x, y, z: pf1(x, y, z) ^ pf2(x, y, z)
 
-    return Object3D(pf=f(obj1.pf, obj2.pf), components=[obj1, obj2])
+    return Solid(pf=f(obj1.pf, obj2.pf), nodes=[obj1, obj2])
 
 
 def difference(obj1, obj2):
     def f(pf1, pf2):
         return lambda x, y, z: pf1(x, y, z) and not pf2(x, y, z)
 
-    return Object3D(pf=f(obj1.pf, obj2.pf), components=[obj1, obj2])
+    return Solid(pf=f(obj1.pf, obj2.pf), nodes=[obj1, obj2])
 
 
 def translate(obj, dx=0.0, dy=0.0, dz=0.0):
     def f(pf):
         return lambda x, y, z: pf(x-dx, y-dy, z-dz)
 
-    return Object3D(pf=f(obj.pf), components=[obj])
+    return Solid(pf=f(obj.pf), nodes=[obj])
 
 
 def rotate(obj):
@@ -90,23 +91,4 @@ def scale():
 
 
 def mirror(obj, plane=None, axis=None, center=None):
-
-    if plane and not (axis or center):
-        def f(pf):
-            return lambda x, y, z: pf(x, y, z)
-
-        return Object3D(pf=f(obj.pf), components=[obj])
-
-    if axis and not (plane or center):
-        def f(pf):
-            return lambda x, y, z: pf(x, y, z)
-
-        return Object3D(pf=f(obj.pf), components=[obj])
-
-    if center and not (plane or axis):
-        def f(pf):
-            return lambda x, y, z: pf(x, y, z)
-
-        return Object3D(pf=f(obj.pf), components=[obj])
-
-    raise ValueError()
+    raise NotImplementedError()
