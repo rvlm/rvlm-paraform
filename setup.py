@@ -28,10 +28,7 @@ setup(
     url                = "https://github.com/rvlm/rvlm-paraform",
     keywords           = ["helpers"],
     requires           = ["numpy", "rvlm.labhelpers"],
-    description        = ("Helper library and scripts which were useful for "
-                          "my experiments at the lab #426 (devoted to UWB "
-                          "signals and antennas) during my PhD at Voronezh "
-                          "State University."),
+    description        = (""),
     classifiers        = ["Programming Language :: Python",
                           "Programming Language :: Python :: 3",
                           "Development Status :: 2 - Pre-Alpha",
