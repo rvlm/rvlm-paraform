@@ -33,4 +33,5 @@ def test_boolean_operations_3d():
     assert (render(ball - cube) == load("ball_minus_cube.npz")).all()
 
 
-test_boolean_operations_3d()
+if __name__ == "__main__":
+    test_boolean_operations_3d()
