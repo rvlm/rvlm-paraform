@@ -28,7 +28,8 @@ setup(
     url                = "https://github.com/rvlm/rvlm-paraform",
     keywords           = ["helpers"],
     requires           = ["numpy", "rvlm.labhelpers"],
-    description        = (""),
+    description        = (""
+                          ""),
     classifiers        = ["Programming Language :: Python",
                           "Programming Language :: Python :: 3",
                           "Development Status :: 2 - Pre-Alpha",
@@ -37,5 +38,5 @@ setup(
                           "Intended Audience :: Science/Research",
                           "License :: OSI Approved :: MIT License",
                           "Natural Language :: English",
-                          "Operating System :: POSIX" ],
+                          "Operating System :: POSIX"],
     long_description   = slurp("README.rst"))

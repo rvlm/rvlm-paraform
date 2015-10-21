@@ -12,16 +12,8 @@ def render_to_bool_array(obj, ranges, nums):
     return vpf(xs, ys, zs)
 
 
-
-
-
 def iterate_range(rng, num):
     """
-
-    :param start:
-    :param stop:
-    :param num:
-    :return:
 
         >>> list(iterate_range((0, 1), num=5))
         [0.0, 0.25, 0.5, 0.75, 1.0]
@@ -29,6 +21,7 @@ def iterate_range(rng, num):
         [1.0, 0.75, 0.5, 0.25, 0.0]
         >>> list(iterate_range((0, 0), num=5))
         [0.0, 0.0, 0.0, 0.0, 0.0]
+
     """
     a, b = rng
     delta = (b - a) / (num - 1)
@@ -46,12 +39,6 @@ def iterate_ranges3(ranges, nums):
 
 def render_to_points_array(obj, ranges, nums):
     """
-
-    :param obj:
-    :param ranges:
-    :param nums:
-    :return:
-
     """
 
     pf = obj.pf

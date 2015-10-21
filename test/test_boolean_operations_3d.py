@@ -21,9 +21,9 @@ def test_boolean_operations_3d():
     ball = pf.Ball(2.4)
 
     # Check mathematical properties.
-    assert (render(cube | cube)        == render(cube)).all()
-    assert (render(cube & cube)        == render(cube)).all()
-    assert render(cube ^ cube).any()   == False
+    assert (render(cube | cube) == render(cube)).all()
+    assert (render(cube & cube) == render(cube)).all()
+    assert render(cube ^ cube).any() == False
 
     # Compare to saved renders.
     assert (render(cube & ball) == load("cube_and_ball.npz")).all()

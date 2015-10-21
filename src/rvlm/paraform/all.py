@@ -1,4 +1,5 @@
-from rvlm.paraform.solid              import *
-from rvlm.paraform.solid_primitives   import *
-from rvlm.paraform.surface            import *
-from rvlm.paraform.surface_primitives import *
+# noinspection PyUnresolvedReferences
+from rvlm.paraform.solid import *
+
+# noinspection PyUnresolvedReferences
+from rvlm.paraform.surface import *
