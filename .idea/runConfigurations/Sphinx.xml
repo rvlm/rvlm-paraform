@@ -1,0 +1,24 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Sphinx" type="docs" factoryName="Sphinx task">
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs />
+    <option name="SDK_HOME" value="" />
+    <option name="WORKING_DIRECTORY" value="" />
+    <option name="IS_MODULE_SDK" value="true" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <module name="rvlm-paraform" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+    <option name="docutils_input_file" value="$PROJECT_DIR$/sphinx" />
+    <option name="docutils_output_file" value="$PROJECT_DIR$/build-sphinx" />
+    <option name="docutils_params" value="" />
+    <option name="docutils_task" value="html" />
+    <option name="docutils_open_in_browser" value="false" />
+    <method>
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Code autogen" run_configuration_type="PythonConfigurationType" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Unittests (doctest)" run_configuration_type="tests" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Unittests (py.test)" run_configuration_type="tests" />
+    </method>
+  </configuration>
+</component>

@@ -10,9 +10,7 @@ research in radio physics at Voronezh State University, Russia.
 :copyright: Pavel Kretov, 2015
 :license: MIT
 
-.. comment: toctree::
+.. toctree::
    :maxdepth: 2
-   paraform-solid
-   paraform-surface
-   paraform-track
 
+   doc-developers

@@ -1,5 +1,8 @@
-.idea/
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
 build*/
 dist*/
+*.cache/
 *.egg-info*
 *.pyc
