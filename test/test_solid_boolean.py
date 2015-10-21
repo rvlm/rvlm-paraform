@@ -3,7 +3,7 @@ import numpy as np
 import rvlm.paraform.solid as pfs
 
 
-def test_boolean_operations_3d():
+def test_solid_boolean_operations():
 
     def render(obj):
         grid = np.meshgrid(np.linspace(-2, 2, 50),
@@ -34,4 +34,4 @@ def test_boolean_operations_3d():
 
 
 if __name__ == "__main__":
-    test_boolean_operations_3d()
+    test_solid_boolean_operations()
