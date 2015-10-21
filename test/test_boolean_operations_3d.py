@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import rvlm.paraform.all as pf
+import rvlm.paraform.solid as pfs
 
 
 def test_boolean_operations_3d():
@@ -17,8 +17,8 @@ def test_boolean_operations_3d():
         with np.load(real_name) as f:
             return f['arr_0']
 
-    cube = pf.cube(2.0)
-    ball = pf.Ball(2.4)
+    cube = pfs.Cuboid(2.0, 2.0, 2.0)
+    ball = pfs.Ellipsoid(2.4, 2.4, 2.4)
 
     # Check mathematical properties.
     assert (render(cube | cube) == render(cube)).all()

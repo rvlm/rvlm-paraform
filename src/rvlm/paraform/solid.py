@@ -1,7 +1,7 @@
 
 class Solid(object):
 
-    def __init__(self, pf, underlying=None):
+    def __init__(self, *, pf, underlying=None):
         """
         """
 
@@ -48,6 +48,74 @@ class Solid(object):
 
     def mirror(self, **kwargs):
         return mirror(self, **kwargs)
+
+
+class Cuboid(Solid):
+    """
+    """
+
+    def __init__(self, x_edge, y_edge, z_edge, **kwargs):
+        """
+        """
+
+        self._x_edge = x_edge
+        self._y_edge = y_edge
+        self._z_edge = z_edge
+
+        def pf(x, y, z):
+            hx = x_edge / 2
+            hy = y_edge / 2
+            hz = z_edge / 2
+            return (-hx <= x <= hx and
+                    -hy <= y <= hy and
+                    -hz <= z <= hz)
+
+        super().__init__(pf=pf, **kwargs)
+
+    @property
+    def x_edge(self):
+        return self._x_edge
+
+    @property
+    def y_edge(self):
+        return self._y_edge
+
+    @property
+    def z_edge(self):
+        return self._z_edge
+
+
+class Ellipsoid(Solid):
+    """
+    """
+
+    def __init__(self, x_diameter, y_diameter, z_diameter, **kwargs):
+        """
+        """
+
+        self._x_diameter = x_diameter
+        self._y_diameter = y_diameter
+        self._z_diameter = z_diameter
+
+        def pf(x, y, z):
+            ax = x_diameter / 2
+            ay = y_diameter / 2
+            az = z_diameter / 2
+            return (x/ax)**2 + (y/ay)**2 + (z/az)**2 <= 1
+
+        super().__init__(pf=pf, **kwargs)
+
+    @property
+    def x_diameter(self):
+        return self._x_diameter
+
+    @property
+    def y_diameter(self):
+        return self._y_diameter
+
+    @property
+    def z_diameter(self):
+        return self._z_diameter
 
 
 def intersection(*solids):
