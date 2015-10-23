@@ -18,20 +18,27 @@ def test_solid_boolean_operations():
         with numpy.load(real_name) as f:
             return f['arr_0']
 
+    # This ugly function is here due to PyCharm bug, preventing it from
+    # understanding numpy array's equality comparison.
+    # https://youtrack.jetbrains.com/issue/PY-17350
+    def eq(array1: numpy.ndarray, array2: numpy.ndarray) -> bool:
+        # noinspection PyUnresolvedReferences
+        return (array1 == array2).all()
+
     cube = pfs.Cuboid(2.0, 2.0, 2.0)
     ball = pfs.Ellipsoid(2.4, 2.4, 2.4)
 
     # Check mathematical properties.
-    assert numpy.all(render(cube | cube) == render(cube))
-    assert numpy.all(render(cube & cube) == render(cube))
-    assert numpy.any(render(cube ^ cube)) == False
+    assert eq(render(cube | cube), render(cube))
+    assert eq(render(cube & cube), render(cube))
+    assert not render(cube ^ cube).any()
 
     # Compare to saved renders.
-    assert numpy.all(render(cube & ball) == load("cube_and_ball.npz"))
-    assert numpy.all(render(cube | ball) == load("cube_or_ball.npz"))
-    assert numpy.all(render(cube ^ ball) == load("cube_xor_ball.npz"))
-    assert numpy.all(render(cube - ball) == load("cube_minus_ball.npz"))
-    assert numpy.all(render(ball - cube) == load("ball_minus_cube.npz"))
+    assert eq(render(cube & ball), load("cube_and_ball.npz"))
+    assert eq(render(cube | ball), load("cube_or_ball.npz"))
+    assert eq(render(cube ^ ball), load("cube_xor_ball.npz"))
+    assert eq(render(cube - ball), load("cube_minus_ball.npz"))
+    assert eq(render(ball - cube), load("ball_minus_cube.npz"))
 
 
 if __name__ == "__main__":
