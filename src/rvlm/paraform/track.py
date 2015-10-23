@@ -1,3 +1,8 @@
+"""
+Parametric curves (tracks)
+==========================
+
+"""
 import rvlm.paraform.utils as _utils
 
 

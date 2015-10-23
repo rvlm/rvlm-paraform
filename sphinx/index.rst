@@ -13,4 +13,5 @@ research in radio physics at Voronezh State University, Russia.
 .. toctree::
    :maxdepth: 2
 
-   doc-developers
+   doc/index
+   ref/index

@@ -32,7 +32,9 @@ sys.path.insert(0, root_dir)
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'alabaster']
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.mathjax',
+              'alabaster']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['templates']
@@ -77,7 +79,7 @@ add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-add_module_names = True
+add_module_names = False
 
 # If true, sectionauthor' and moduleauthor directives will be shown in the
 # output. They are ignored by default.
@@ -87,7 +89,11 @@ show_authors = False
 pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
-modindex_common_prefix = []
+modindex_common_prefix = ["rvlm.paraform"]
+
+autodoc_member_order = "bysource"
+
+autoclass_content = 'both'
 
 # -- Options for HTML output ---------------------------------------------------
 

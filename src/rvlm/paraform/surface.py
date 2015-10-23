@@ -1,3 +1,8 @@
+"""
+Two parametric surfaces
+=======================
+
+"""
 import rvlm.paraform.utils as _utils
 
 

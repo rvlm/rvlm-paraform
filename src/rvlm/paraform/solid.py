@@ -1,3 +1,8 @@
+"""
+Solid bodies
+============
+
+"""
 
 class Solid(object):
 

@@ -1,3 +1,8 @@
+"""
+Miscellaneous helper functions
+==============================
+
+"""
 import math as _math
 import rvlm.paraform.autogen as _autogen
 
