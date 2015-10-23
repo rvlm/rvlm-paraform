@@ -11,6 +11,14 @@
 import sys
 import os
 
+# The following inspection is suppressed because library user isn't required to
+# have Alabaster theme installed, as well as Sphinx itself. They're only
+# supposed to be run on a developer's system.
+# See also: https://pypi.python.org/pypi/alabaster
+# ---
+# noinspection PyPackageRequirements
+import alabaster
+
 # Damn you Guido.
 assert sys.version_info.major >= 3, "Python 2.* is not supported"
 
@@ -24,7 +32,7 @@ sys.path.insert(0, root_dir)
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc']
+extensions = ['sphinx.ext.autodoc', 'alabaster']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['templates']
@@ -81,12 +89,11 @@ pygments_style = 'sphinx'
 # A list of ignored prefixes for module index sorting.
 modindex_common_prefix = []
 
-
 # -- Options for HTML output ---------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -94,7 +101,7 @@ html_theme = 'default'
 html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = []
+html_theme_path = [alabaster.get_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
