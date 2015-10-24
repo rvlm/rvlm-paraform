@@ -5,7 +5,10 @@ Parametric curves (tracks)
 In this library context, *one-parametric curve* (or *track*) is one-dimensional
 entity, defined by it's *track function*:
 
-.. math:: \\vec{r} = \\text{tf}(s), \\quad s_1 \\le s \\le s_2
+.. math::
+
+   \\DeclareMathOperator{\\tf}{tf}
+   \\vec{r} = \\tf(s), \\quad s_1 \\le s \\le s_2
 
 where :math:`s` is a freely varying curve parameter. Track function produces a
 set of :math:`\\vec{r}` vectors, which describe the curve location in space.
@@ -17,7 +20,7 @@ Curve rendering is always an approximation. The :math:`[s_1; s_2]` ranges is
 divided into a number of segments by evenly spaced :math:`s_i` points. For each
 :math:`s_i` its corresponding vector :math:`\\vec{r}_i` is calculated:
 
-.. math:: \\vec{r}_i = \\text{tf}(s_i).
+.. math:: \\vec{r}_i = \\tf(s_i).
 
 Thus the curve is treated as a number of line segments
 :math:`[\\vec{r}_i, \\vec{r}_{i+1}]`, located in a tridimentional space. When
@@ -26,8 +29,8 @@ lattice all operations a really performed on its line segments. So, it's really
 important to choose an appropriate step for :math:`s_i` points: having too
 distant points would produce an image of poor quality, having to close points
 would significantly increase time to display or render. Note that the nature of
-:math:`\\text{tf}(s)` function itself is the first factor to take into
-consideration when estimating that step.
+:math:`\\tf(s)` function itself is the first factor to take into consideration
+when estimating that step value.
 
 """
 import rvlm.paraform.utils as _utils
@@ -42,13 +45,13 @@ class Track(object):
 
     def __init__(self, tf, s_range, underlying=None):
         """
-        It requires only track function :math:`\\text{tf}(s)` and
-        :math:`[s_1; s_2]` range to be passed as arguments.
+        It requires only track function :math:`\\tf(s)` and :math:`[s_1; s_2]`
+        range to be passed as arguments.
 
         :type tf: (float) -> (float, float, float)
         :parameter tf:
-            Track function :math:`\\text{tf}(s)` as Python callable object. It
-            may be, for example, lambda expression or class instance with
+            Track function :math:`\\tf(s)` as Python callable object. It may
+            be, for example, lambda expression or class instance with
             `__call__` method overridden. This way or another, it must allow
             calling with single floating point parameter, returning a tuple of
             three Cartesian coordinates :math:`(x, y, z)`, which represent
@@ -65,7 +68,7 @@ class Track(object):
             List of tracks this track is based on. Currently this list is just
             stored as class property to make object tree inspection possible.
             Normally this property should never be accessed from within of the
-            class itself, because all parameters needed for :math:`\\text{tf}`
+            class itself, because all parameters needed for :math:`\\tf`
             function computation are usually referred as direct closures.
         """
 
@@ -82,8 +85,8 @@ class Track(object):
     @property
     def tf(self):
         """
-        Gets track function :math:`\\text{tf}(s)` which was passed to
-        constructor at the object creation. This property is read only.
+        Gets track function :math:`\\tf(s)` which was passed to constructor at
+        the object creation. This property is read only.
 
         :rtype: callable
         """
@@ -136,4 +139,3 @@ class Axis(Track):
     @property
     def direction(self):
         return self._direction
-
