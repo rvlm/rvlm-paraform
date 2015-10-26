@@ -27,9 +27,6 @@ config_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir   = os.path.join(os.path.dirname(config_dir), "src")
 sys.path.insert(0, root_dir)
 
-# Import all documented modules this package holds.
-# ...
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
@@ -155,7 +152,7 @@ html_use_index = True
 html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 html_show_sphinx = True
