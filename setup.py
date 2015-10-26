@@ -27,13 +27,13 @@ setup(
     license            = "MIT",
     url                = "https://github.com/rvlm/rvlm-paraform",
     keywords           = ["helpers"],
-    requires           = ["numpy", "rvlm.labhelpers"],
-    description        = (""
-                          ""),
+    requires           = ["numpy"],
+    description        = ("Simple ad-hoc Python API to generate parametric "
+                          "models for antenna devices for further FDTD "
+                          "simulation"),
     classifiers        = ["Programming Language :: Python",
                           "Programming Language :: Python :: 3",
                           "Development Status :: 2 - Pre-Alpha",
-                          "Environment :: Console",
                           "Intended Audience :: Developers",
                           "Intended Audience :: Science/Research",
                           "License :: OSI Approved :: MIT License",
