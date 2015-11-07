@@ -124,6 +124,8 @@ def is_number(x):
 
 def is_vector_2d(v):
     """
+    Checks whether `v` is two-component vector. Returns :const:`True` if `v`
+    is list or tuple or 2 numbers and :const:`False` if it isn't.
     """
     return (v is not None
               and (type(v) == list or type(v) == tuple)
