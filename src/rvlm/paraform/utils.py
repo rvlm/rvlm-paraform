@@ -140,7 +140,7 @@ def is_vector_3d(v):
     when `v` is a list or tuple with exactly three number items.
 
         >>> is_vector_3d(None)
-        True
+        False
         >>> is_vector_3d([1.0, 2.0])
         False
         >>> is_vector_3d([1, 2, 3.0])
