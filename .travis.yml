@@ -14,3 +14,9 @@ script:
   - cd src/
   - python -m pytest --verbose --doctest-modules .
   - python -m pytest --verbose ../test
+
+before_install:
+  - pip install codecov
+
+after_success:
+  - codecov
