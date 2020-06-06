@@ -30,9 +30,6 @@ class Solid(object):
     def __or__(self, other):
         return union(self, other)
 
-    def __xor__(self, other):
-        return xunion(self, other)
-
     def __add__(self, other):
         return union(self, other)
 
@@ -135,13 +132,10 @@ def union(*solids):
         return any(map(lambda obj: obj.pf(x, y, z), solids))
 
     return Solid(pf=pf, underlying=solids)
+    def sdf(x, y, z):
+        return min(obj.sdf(x, y, z) for obj in solids)
 
-
-def xunion(obj1, obj2):
-    def f(pf1, pf2):
-        return lambda x, y, z: pf1(x, y, z) ^ pf2(x, y, z)
-
-    return Solid(pf=f(obj1.pf, obj2.pf), underlying=[obj1, obj2])
+    return Solid(sdf=sdf, underlying=solids)
 
 
 def difference(obj1, obj2):

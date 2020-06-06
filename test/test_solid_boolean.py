@@ -31,12 +31,10 @@ def test_solid_boolean_operations():
     # Check mathematical properties.
     assert eq(render(cube | cube), render(cube))
     assert eq(render(cube & cube), render(cube))
-    assert not render(cube ^ cube).any()
 
     # Compare to saved renders.
     assert eq(render(cube & ball), load("cube_and_ball.npz"))
     assert eq(render(cube | ball), load("cube_or_ball.npz"))
-    assert eq(render(cube ^ ball), load("cube_xor_ball.npz"))
     assert eq(render(cube - ball), load("cube_minus_ball.npz"))
     assert eq(render(ball - cube), load("ball_minus_cube.npz"))
 
