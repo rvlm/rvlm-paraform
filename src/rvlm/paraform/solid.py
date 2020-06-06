@@ -3,22 +3,23 @@ Solid bodies
 ============
 
 """
+import math as _math
 
 class Solid(object):
 
-    def __init__(self, *, pf, underlying=None):
+    def __init__(self, *, sdf, underlying=None):
         """
         """
 
         if underlying is None:
             underlying = []
 
-        self._pf = pf
+        self._sdf = sdf
         self._underlying   = underlying
 
     @property
-    def pf(self):
-        return self._pf
+    def sdf(self):
+        return self._sdf
 
     @property
     def underlying(self):
@@ -64,15 +65,23 @@ class Cuboid(Solid):
         self._y_edge = y_edge
         self._z_edge = z_edge
 
-        def pf(x, y, z):
-            hx = x_edge / 2
-            hy = y_edge / 2
-            hz = z_edge / 2
-            return (-hx <= x <= hx and
-                    -hy <= y <= hy and
-                    -hz <= z <= hz)
+        bx = x_edge / 2
+        by = y_edge / 2
+        bz = z_edge / 2
 
-        super().__init__(pf=pf, **kwargs)
+        def sdf(x, y, z):
+            qx = abs(x) - bx
+            qy = abs(y) - by
+            qz = abs(z) - bz
+
+            ux = max(qx, 0.0)
+            uy = max(qy, 0.0)
+            uz = max(qz, 0.0)
+            uMag = _math.sqrt(ux * ux + uy * uy + uz * uz)
+
+            return uMag + min(max(qx, max(qy, qz)), 0.0)
+
+        super().__init__(sdf=sdf, **kwargs)
 
     @property
     def x_edge(self):
@@ -99,13 +108,22 @@ class Ellipsoid(Solid):
         self._y_diameter = y_diameter
         self._z_diameter = z_diameter
 
-        def pf(x, y, z):
-            ax = x_diameter / 2
-            ay = y_diameter / 2
-            az = z_diameter / 2
-            return (x/ax)**2 + (y/ay)**2 + (z/az)**2 <= 1
+        rx = x_diameter / 2
+        ry = y_diameter / 2
+        rz = z_diameter / 2
 
-        super().__init__(pf=pf, **kwargs)
+        def sdf(x, y, z):
+            vx = x / rx
+            vy = y / ry
+            vz = z / rz
+            ux = vx / rx
+            uy = vy / ry
+            uz = vz / rz
+            vMag = _math.sqrt(vx * vx + vy * vy + vz * vz)
+            uMag = _math.sqrt(ux * ux + uy * uy + uz * uz)
+            return vMag * (vMag - 1) / uMag
+
+        super().__init__(sdf=sdf, **kwargs)
 
     @property
     def x_diameter(self):
@@ -121,17 +139,13 @@ class Ellipsoid(Solid):
 
 
 def intersection(*solids):
-    def pf(x, y, z):
-        return all(map(lambda obj: obj.pf(x, y, z), solids))
+    def sdf(x, y, z):
+        return max(obj.sdf(x, y, z) for obj in solids)
 
-    return Solid(pf=pf, underlying=solids)
+    return Solid(sdf=sdf, underlying=solids)
 
 
 def union(*solids):
-    def pf(x, y, z):
-        return any(map(lambda obj: obj.pf(x, y, z), solids))
-
-    return Solid(pf=pf, underlying=solids)
     def sdf(x, y, z):
         return min(obj.sdf(x, y, z) for obj in solids)
 
@@ -139,11 +153,10 @@ def union(*solids):
 
 
 def difference(obj1, obj2):
-    def transform(pf1, pf2):
-        return lambda x, y, z: pf1(x, y, z) and not pf2(x, y, z)
+    def sdf(x, y, z):
+        return max(obj1.sdf(x, y, z), -obj2.sdf(x, y, z))
 
-    return Solid(pf=transform(obj1.pf, obj2.pf),
-                 underlying=[obj1, obj2])
+    return Solid(sdf=sdf, underlying=[obj1, obj2])
 
 
 def translate(obj, dx=0.0, dy=0.0, dz=0.0):

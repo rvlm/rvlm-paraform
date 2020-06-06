@@ -10,8 +10,8 @@ def test_solid_boolean_operations():
                               numpy.linspace(-2, 2, 50),
                               numpy.linspace(-2, 2, 50))
 
-        vpf = numpy.vectorize(obj.pf)
-        return vpf(*grid)
+        vsdf = numpy.vectorize(obj.sdf)
+        return vsdf(*grid) < 0.0
 
     def load(name) -> numpy.ndarray:
         real_name = os.path.join(os.path.dirname(__file__), "renders", name)
