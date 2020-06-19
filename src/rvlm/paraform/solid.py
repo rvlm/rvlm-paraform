@@ -7,20 +7,12 @@ import math as _math
 
 class Solid(object):
 
-    def __init__(self, *, sdf, underlying=None):
-        if underlying is None:
-            underlying = []
-
+    def __init__(self, *, sdf):
         self._sdf = sdf
-        self._underlying   = underlying
 
     @property
     def sdf(self):
         return self._sdf
-
-    @property
-    def underlying(self):
-        return self._underlying
 
     def __and__(self, other):
         return intersection(self, other)
@@ -52,7 +44,7 @@ class Solid(object):
 
 class Cuboid(Solid):
 
-    def __init__(self, x_edge, y_edge, z_edge, **kwargs):
+    def __init__(self, x_edge, y_edge, z_edge):
 
         self._x_edge = x_edge
         self._y_edge = y_edge
@@ -74,7 +66,7 @@ class Cuboid(Solid):
 
             return uMag + min(max(qx, max(qy, qz)), 0.0)
 
-        super().__init__(sdf=sdf, **kwargs)
+        super().__init__(sdf=sdf)
 
     @property
     def x_edge(self):
@@ -91,7 +83,7 @@ class Cuboid(Solid):
 
 class Ellipsoid(Solid):
 
-    def __init__(self, x_diameter, y_diameter, z_diameter, **kwargs):
+    def __init__(self, x_diameter, y_diameter, z_diameter):
 
         self._x_diameter = x_diameter
         self._y_diameter = y_diameter
@@ -112,7 +104,7 @@ class Ellipsoid(Solid):
             uMag = _math.sqrt(ux * ux + uy * uy + uz * uz)
             return vMag * (vMag - 1) / uMag
 
-        super().__init__(sdf=sdf, **kwargs)
+        super().__init__(sdf=sdf)
 
     @property
     def x_diameter(self):
@@ -131,21 +123,21 @@ def intersection(*solids):
     def sdf(x, y, z):
         return max(obj.sdf(x, y, z) for obj in solids)
 
-    return Solid(sdf=sdf, underlying=solids)
+    return Solid(sdf=sdf)
 
 
 def union(*solids):
     def sdf(x, y, z):
         return min(obj.sdf(x, y, z) for obj in solids)
 
-    return Solid(sdf=sdf, underlying=solids)
+    return Solid(sdf=sdf)
 
 
 def difference(obj1, obj2):
     def sdf(x, y, z):
         return max(obj1.sdf(x, y, z), -obj2.sdf(x, y, z))
 
-    return Solid(sdf=sdf, underlying=[obj1, obj2])
+    return Solid(sdf=sdf)
 
 
 def translate(obj, dx=0.0, dy=0.0, dz=0.0):
