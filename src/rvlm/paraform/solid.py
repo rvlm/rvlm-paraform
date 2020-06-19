@@ -8,9 +8,6 @@ import math as _math
 class Solid(object):
 
     def __init__(self, *, sdf, underlying=None):
-        """
-        """
-
         if underlying is None:
             underlying = []
 
@@ -54,12 +51,8 @@ class Solid(object):
 
 
 class Cuboid(Solid):
-    """
-    """
 
     def __init__(self, x_edge, y_edge, z_edge, **kwargs):
-        """
-        """
 
         self._x_edge = x_edge
         self._y_edge = y_edge
@@ -97,12 +90,8 @@ class Cuboid(Solid):
 
 
 class Ellipsoid(Solid):
-    """
-    """
 
     def __init__(self, x_diameter, y_diameter, z_diameter, **kwargs):
-        """
-        """
 
         self._x_diameter = x_diameter
         self._y_diameter = y_diameter
