@@ -4,15 +4,57 @@ Solid bodies
 
 """
 import math as _math
+import dataclasses as _dc
+import numpy as _np
+
+
+@_dc.dataclass(frozen=True)
+class Material:
+    epsilon : float = 1.0
+    mu      : float = 1.0
+    sigma   : float = 0.0
+    sigmaH  : float = 0.0
+
+
+def _wrapMaterial(material):
+    if material is None:
+        return lambda p: Material()
+
+    if isinstance(material, Material):
+        return lambda p: material
+
+    if callable(material):
+        return material
+
+    raise ValueError("material: unsupported type")
+
+
+def _combine(sdf, material):
+    material = _wrapMaterial(material)
+    def probeFunc(p):
+        sd = sdf(p)
+        if sd > 0.0:
+            return sd, None
+
+        mat = material(p)
+        return sd, mat
+
+    return probeFunc
+
+
+def _blend(*materials):
+    assert len(materials) > 0
+    return materials[0]
+
 
 class Solid(object):
 
-    def __init__(self, *, sdf):
-        self._sdf = sdf
+    def __init__(self, probeFunc):
+        self._probeFunc = probeFunc
 
     @property
-    def sdf(self):
-        return self._sdf
+    def probe(self):
+        return self._probeFunc
 
     def __and__(self, other):
         return intersection(self, other)
@@ -44,100 +86,107 @@ class Solid(object):
 
 class Cuboid(Solid):
 
-    def __init__(self, x_edge, y_edge, z_edge):
+    def __init__(self, dimensions : _np.ndarray, material = None):
 
-        self._x_edge = x_edge
-        self._y_edge = y_edge
-        self._z_edge = z_edge
+        dimensions = _np.copy(dimensions)
+        self._dimentions = dimensions
 
-        bx = x_edge / 2
-        by = y_edge / 2
-        bz = z_edge / 2
+        def sdf(p : _np.ndarray):
+            q = _np.abs(p) - 0.5 * dimensions
+            u = _np.maximum(q, 0.0)
+            uMag = _np.linalg.norm(u)
 
-        def sdf(x, y, z):
-            qx = abs(x) - bx
-            qy = abs(y) - by
-            qz = abs(z) - bz
-
-            ux = max(qx, 0.0)
-            uy = max(qy, 0.0)
-            uz = max(qz, 0.0)
-            uMag = _math.sqrt(ux * ux + uy * uy + uz * uz)
-
+            qx, qy, qz = q
             return uMag + min(max(qx, max(qy, qz)), 0.0)
 
-        super().__init__(sdf=sdf)
+        super().__init__(_combine(sdf, material))
 
     @property
-    def x_edge(self):
-        return self._x_edge
-
-    @property
-    def y_edge(self):
-        return self._y_edge
-
-    @property
-    def z_edge(self):
-        return self._z_edge
+    def dimensions(self):
+        return self._dimentions
 
 
 class Ellipsoid(Solid):
 
-    def __init__(self, x_diameter, y_diameter, z_diameter):
+    def __init__(self, dimensions : _np.ndarray, material = None):
 
-        self._x_diameter = x_diameter
-        self._y_diameter = y_diameter
-        self._z_diameter = z_diameter
+        dimensions = _np.copy(dimensions)
+        self._dimentions = dimensions
 
-        rx = x_diameter / 2
-        ry = y_diameter / 2
-        rz = z_diameter / 2
-
-        def sdf(x, y, z):
-            vx = x / rx
-            vy = y / ry
-            vz = z / rz
-            ux = vx / rx
-            uy = vy / ry
-            uz = vz / rz
-            vMag = _math.sqrt(vx * vx + vy * vy + vz * vz)
-            uMag = _math.sqrt(ux * ux + uy * uy + uz * uz)
+        def sdf(p : _np.ndarray):
+            v = 2 * p / dimensions
+            u = 2 * v / dimensions
+            vMag = _np.linalg.norm(v)
+            uMag = _np.linalg.norm(u)
             return vMag * (vMag - 1) / uMag
 
-        super().__init__(sdf=sdf)
+        super().__init__(_combine(sdf, material))
 
     @property
-    def x_diameter(self):
-        return self._x_diameter
-
-    @property
-    def y_diameter(self):
-        return self._y_diameter
-
-    @property
-    def z_diameter(self):
-        return self._z_diameter
+    def dimensions(self):
+        return self._dimentions
 
 
 def intersection(*solids):
-    def sdf(x, y, z):
-        return max(obj.sdf(x, y, z) for obj in solids)
 
-    return Solid(sdf=sdf)
+    def probeFunc(p):
+
+        if len(solids) == 0:
+            return _np.inf, None
+
+        maxSdf = -_np.inf
+        mats = []
+        for s in solids:
+            sdf, mat = s.probe(p)
+
+            if sdf > maxSdf:
+                maxSdf = sdf
+
+            if sdf <= 0.0:
+                mats.append(mat)
+
+        return maxSdf, _blend(mats)
+
+    return Solid(probeFunc)
 
 
 def union(*solids):
-    def sdf(x, y, z):
-        return min(obj.sdf(x, y, z) for obj in solids)
 
-    return Solid(sdf=sdf)
+    def probeFunc(p):
+
+        if len(solids) == 0:
+            return _np.inf, None
+
+        minSdf = _np.inf
+        mats = []
+        for s in solids:
+            sdf, mat = s.probe(p)
+
+            if sdf < minSdf:
+                minSdf = sdf
+
+            if sdf <= 0.0:
+                mats.append(mat)
+
+        return minSdf, _blend(mats)
+
+    return Solid(probeFunc)
 
 
 def difference(obj1, obj2):
-    def sdf(x, y, z):
-        return max(obj1.sdf(x, y, z), -obj2.sdf(x, y, z))
 
-    return Solid(sdf=sdf)
+    def probeFunc(p):
+        sdf1, mat1 = obj1.probe(p)
+        sdf2, mat2 = obj2.probe(p)
+        sdf = max(sdf1, -sdf2)
+
+        mat = None
+        if sdf1 <= 0.0 and sdf2 > 0.0:
+            mat = _blend(mat1, mat2)
+
+        return sdf, mat
+
+    return Solid(probeFunc)
 
 
 def translate(obj, dx=0.0, dy=0.0, dz=0.0):

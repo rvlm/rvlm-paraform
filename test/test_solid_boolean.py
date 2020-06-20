@@ -5,13 +5,21 @@ import rvlm.paraform.solid as pfs
 
 def test_solid_boolean_operations():
 
-    def render(obj) -> numpy.ndarray:
-        grid = numpy.meshgrid(numpy.linspace(-2, 2, 50),
-                              numpy.linspace(-2, 2, 50),
-                              numpy.linspace(-2, 2, 50))
+    mesh = numpy.meshgrid(
+            numpy.linspace(-2, 2, 50),
+            numpy.linspace(-2, 2, 50),
+            numpy.linspace(-2, 2, 50))
 
-        vsdf = numpy.vectorize(obj.sdf)
-        return vsdf(*grid) < 0.0
+    mesh = numpy.stack(mesh, axis = -1)
+
+    def render(obj) -> numpy.ndarray:
+
+        probeFunc = obj.probe
+        def sdfFunc(p):
+            return probeFunc(p)[0]
+
+        sdfs = numpy.apply_along_axis(sdfFunc, -1, mesh)
+        return sdfs < 0.0
 
     def load(name) -> numpy.ndarray:
         real_name = os.path.join(os.path.dirname(__file__), "renders", name)
@@ -25,8 +33,8 @@ def test_solid_boolean_operations():
         # noinspection PyUnresolvedReferences
         return (array1 == array2).all()
 
-    cube = pfs.Cuboid(2.0, 2.0, 2.0)
-    ball = pfs.Ellipsoid(2.4, 2.4, 2.4)
+    cube = pfs.Cuboid([2.0, 2.0, 2.0])
+    ball = pfs.Ellipsoid([2.4, 2.4, 2.4])
 
     # Check mathematical properties.
     assert eq(render(cube | cube), render(cube))
